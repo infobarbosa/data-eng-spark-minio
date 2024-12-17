@@ -22,6 +22,11 @@ mkdir ./datasets/
 ```
 
 ```sh
+wget https://github.com/infobarbosa/datasets-csv-clientes/raw/refs/heads/main/clientes.csv.gz
+
+```
+
+```sh
 git clone https://github.com/infobarbosa/datasets-csv-clientes ./datasets/
 
 ```
