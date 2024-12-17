@@ -16,16 +16,7 @@ spark = SparkSession \
 
 spark.catalog.setCurrentDatabase("ecommerce")
 
-print("Definindo a variavel BUCKET_NAME que vamos utilizar ao longo do codigo")
-BUCKET_NAME = ""
-s3_client = boto3.client('s3')
-response = s3_client.list_buckets()
 
-for bucket in response['Buckets']:
-    if bucket['Name'].startswith('lab-data-eng-'):
-        BUCKET_NAME = bucket['Name']
-
-print("O bucket que vamos utilizar serah: " + BUCKET_NAME)
 
 print("Obtendo os dados de pedidos")
 dfPed = spark.sql("select * from ecommerce.pedidos_parquet")

@@ -52,8 +52,7 @@ Para verificar se está tudo correto:
 docker compose logs -f
 
 ```
-
-# Parte 2 - MinIO
+# Parte 2 - Datasets
 ### O dataset de clientes
 ```sh
 mkdir ./datasets/
@@ -64,6 +63,14 @@ mkdir ./datasets/
 curl -L -o ./datasets/clientes.csv.gz https://github.com/infobarbosa/datasets-csv-clientes/raw/refs/heads/main/clientes.csv.gz
 
 ```
+
+### O dataset de pedidos
+```sh
+curl -L -o ./datasets/pedidos-2024-01-01.csv.gz https://github.com/infobarbosa/datasets-csv-pedidos/raw/refs/heads/main/pedidos-2024-01-01.csv.gz
+
+```
+
+# Parte 3 - MinIO
 
 ### Criando o bucket `clientes`
 ```sh
@@ -98,7 +105,7 @@ aws s3 ls clientes --endpoint-url http://localhost:9000
 
 ```
 
-# Parte 3 - Spark
+# Parte 4 - Spark
 
 ### Criando o database `ecommerce`
 ```sh
@@ -108,7 +115,7 @@ docker exec -it spark-master /opt/spark/bin/spark-sql -e "CREATE DATABASE ecomme
 
 ### Criando a tabela `clientes`
 ```sh
-docker exec -it spark-master /opt/spark/bin/spark-sql -e "
+docker exec -it spark-master spark-sql -e "
 CREATE TABLE ecommerce.clientes (
     ID LONG,
     NOME STRING,
@@ -119,6 +126,27 @@ CREATE TABLE ecommerce.clientes (
 USING csv
 OPTIONS (
     path 's3a://clientes/clientes.csv.gz',
+    header 'true',
+    delimiter ';',
+    compression 'gzip'
+)"
+```
+
+### Criando a tabela `pedidos`
+```sh
+docker exec -it spark-master /opt/spark/bin/spark-sql -e "
+CREATE TABLE ecommerce.pedidos (
+    ID_PEDIDO STRING,
+    PRODUTO STRING,
+    VALOR_UNITARIO FLOAT,
+    QUANTIDADE LONG,
+    DATA_CRIACAO DATE,
+    UF STRING,
+    ID_CLIENTE LONG
+)
+USING csv
+OPTIONS (
+    path 's3a://clientes/pedidos-2024-01-01.csv.gz',
     header 'true',
     delimiter ';',
     compression 'gzip'
