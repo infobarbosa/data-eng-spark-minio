@@ -89,6 +89,21 @@ services:
     networks:
       - spark_net
 
+  hive-metastore:
+    image: metastore:latest
+    container_name: hive-metastore
+    environment:
+      - HIVE_METASTORE_USER=hive
+      - HIVE_METASTORE_PASSWORD=hive
+      - HIVE_METASTORE_DB=metastore
+      - HIVE_METASTORE_HOST=hive-metastore
+    ports:
+      - "9083:9083"
+    volumes:
+      - ./metastore:/metastore
+    networks:
+      - spark_net
+
 networks:
   spark_net:
     driver: bridge
