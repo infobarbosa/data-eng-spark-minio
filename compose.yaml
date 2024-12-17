@@ -1,0 +1,94 @@
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    volumes:
+      - ./data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    mem_limit: 512m
+    networks:
+      - spark_net
+
+  spark-master:
+    image: bitnami/spark:latest
+    container_name: spark-master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_NO_DAEMONIZE=true
+      # Habilita event log para o History Server
+      - SPARK_EVENTLOG_ENABLED=true
+      - SPARK_EVENTLOG_DIR=file:///tmp/spark-events
+    ports:
+      - "8080:8080"  # UI do master
+      - "7077:7077"  # Porta de comunicação do cluster
+    volumes:
+      - ./spark-events:/tmp/spark-events
+    mem_limit: 512m
+    networks:
+      - spark_net
+
+  spark-worker-1:
+    image: bitnami/spark:latest
+    container_name: spark-worker-1
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=512m
+      - SPARK_WORKER_CORES=1
+      - SPARK_NO_DAEMONIZE=true
+    depends_on:
+      - spark-master
+    mem_limit: 512m
+    networks:
+      - spark_net
+
+  spark-worker-2:
+    image: bitnami/spark:latest
+    container_name: spark-worker-2
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=512m
+      - SPARK_WORKER_CORES=1
+      - SPARK_NO_DAEMONIZE=true
+    depends_on:
+      - spark-master
+    mem_limit: 512m
+    networks:
+      - spark_net
+
+  spark-history-server:
+    image: bitnami/spark:latest
+    container_name: spark-history-server
+    environment:
+      - SPARK_MODE=history-server
+      # Configura o history server para ler os logs da pasta /tmp/spark-events
+      - SPARK_HISTORY_SERVER_OPTS=--dir /tmp/spark-events
+      - SPARK_NO_DAEMONIZE=true
+    depends_on:
+      - spark-master
+    volumes:
+      - ./spark-events:/tmp/spark-events
+    ports:
+      - "18080:18080" # Porta do History Server
+    mem_limit: 512m
+    networks:
+      - spark_net
+
+networks:
+  spark_net:
+    driver: bridge
