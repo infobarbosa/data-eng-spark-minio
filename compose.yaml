@@ -43,7 +43,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 30s
       timeout: 10s
-      retries: 5
+      retries: 10
       start_period: 30s
 
   spark-worker-1:
@@ -65,7 +65,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8081"]
       interval: 30s
       timeout: 10s
-      retries: 5
+      retries: 10
       start_period: 30s
 
   spark-worker-2:
@@ -87,7 +87,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8081"]
       interval: 30s
       timeout: 10s
-      retries: 5
+      retries: 10
       start_period: 30s
 
   spark-history-server:
@@ -111,7 +111,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:18080"]
       interval: 30s
       timeout: 10s
-      retries: 5
+      retries: 10
       start_period: 30s
 
 networks:
