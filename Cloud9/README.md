@@ -1,4 +1,4 @@
-# 01 - Ambiente Cloud9
+# Ambiente Cloud9
 Author: Prof. Barbosa<br>
 Contact: infobarbosa@gmail.com<br>
 Github: [infobarbosa](https://github.com/infobarbosa)
@@ -101,17 +101,16 @@ Ao ser criado, seu ambiente aparece no console do Cloud9
 
 ## Configuração adicional
 
-### Clone do projeto
-Caso ainda não tenha feito, faça o clone do projeto com o seguinte comando:
-```
-git clone https://github.com/infobarbosa/cassandra5-demo.git
+### Download do script `setup_cloud9_env.sh`
 
+```sh
+curl -o setup_cloud9_env.sh https://github.com/infobarbosa/data-eng-spark-minio/raw/refs/heads/main/Cloud9/assets/scripts/setup_cloud9_env.sh
 ```
 
 ### Configuração de disco
 No terminal, execute o seguinte script para ajustar o espaço em disco do Cloud9
-```
-sh ./cassandra5-demo/assets/scripts/setup_cloud9_env.sh
+```sh
+sh ./setup_cloud9_env.sh
 
 ```
 

@@ -9,7 +9,7 @@ sudo apt install -y jq tree
 
 echo "### Redimensionando o disco ###"
 echo "### O tamanho desejado em GiB ###"
-export CLOUD9_DISK_NEW_SIZE=150
+export CLOUD9_DISK_NEW_SIZE=100
 
 echo "### O ID da instância EC2 do ambiente Cloud9 ###"
 export CLOUD9_EC2_INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data//instance-id)
