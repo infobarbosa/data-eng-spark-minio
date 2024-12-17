@@ -97,3 +97,30 @@ AWS_SECRET_ACCESS_KEY=minioadmin \
 aws s3 ls clientes --endpoint-url http://localhost:9000
 
 ```
+
+# Parte 3 - Spark
+
+### Criando o database `ecommerce`
+```sh
+docker exec -it spark-master /opt/spark/bin/spark-sql -e "CREATE DATABASE ecommerce"
+
+```
+
+### Criando a tabela `clientes`
+```sh
+docker exec -it spark-master /opt/spark/bin/spark-sql -e "
+CREATE TABLE ecommerce.clientes (
+    ID LONG,
+    NOME STRING,
+    DATA_NASC DATE,
+    CPF STRING,
+    EMAIL STRING
+)
+USING csv
+OPTIONS (
+    path 's3a://clientes/clientes.csv.gz',
+    header 'true',
+    delimiter ';',
+    compression 'gzip'
+)"
+```
