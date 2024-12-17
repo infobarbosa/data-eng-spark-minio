@@ -1,4 +1,34 @@
+
 services:
+  mysql:
+    image: bitnami/mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=my_password
+      - MYSQL_DATABASE=metastore
+    mem_limit: 512m
+    networks:
+      - spark_net
+
+  hive-metastore:
+    image: apache/hive:4.0.1
+#    image: bitnami/hive:latest
+    container_name: hive-metastore
+    environment:
+      - HIVE_MODE=metastore
+      - HIVE_METASTORE_PORT_NUMBER=9083
+      - HIVE_METASTORE_HOSTNAME=hive-metastore
+      - HIVE_DATABASE_HOST=mysql
+      - HIVE_DATABASE_USER=root
+      - HIVE_DATABASE_PASSWORD=my_password
+      - HIVE_DATABASE_NAME=metastore
+    depends_on:
+      - mysql
+    mem_limit: 512m
+    ports:
+      - "9083:9083"
+    networks:
+      - spark_net
+
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -29,14 +59,16 @@ services:
       - SPARK_MASTER_HOST=spark-master
       - SPARK_MASTER_PORT=7077
       - SPARK_NO_DAEMONIZE=true
-      # Habilita event log para o History Server
+      # Habilita event log para History Server
       - SPARK_EVENTLOG_ENABLED=true
       - SPARK_EVENTLOG_DIR=file:///tmp/spark-events
+      - SPARK_SQL_CATALOG_IMPLEMENTATION=hive
     ports:
-      - "8080:8080"  # UI do master
-      - "7077:7077"  # Porta de comunicação do cluster
+      - "8080:8080"
+      - "7077:7077"
     volumes:
       - ./spark-events:/tmp/spark-events
+      - ./hive-site.xml:/opt/bitnami/spark/conf/hive-site.xml
     mem_limit: 512m
     networks:
       - spark_net
@@ -50,8 +82,11 @@ services:
       - SPARK_WORKER_MEMORY=512m
       - SPARK_WORKER_CORES=1
       - SPARK_NO_DAEMONIZE=true
+      - SPARK_SQL_CATALOG_IMPLEMENTATION=hive
     depends_on:
       - spark-master
+    volumes:
+      - ./hive-site.xml:/opt/bitnami/spark/conf/hive-site.xml
     mem_limit: 512m
     networks:
       - spark_net
@@ -65,8 +100,11 @@ services:
       - SPARK_WORKER_MEMORY=512m
       - SPARK_WORKER_CORES=1
       - SPARK_NO_DAEMONIZE=true
+      - SPARK_SQL_CATALOG_IMPLEMENTATION=hive
     depends_on:
       - spark-master
+    volumes:
+      - ./hive-site.xml:/opt/bitnami/spark/conf/hive-site.xml
     mem_limit: 512m
     networks:
       - spark_net
@@ -76,31 +114,17 @@ services:
     container_name: spark-history-server
     environment:
       - SPARK_MODE=history-server
-      # Configura o history server para ler os logs da pasta /tmp/spark-events
       - SPARK_HISTORY_SERVER_OPTS=--dir /tmp/spark-events
       - SPARK_NO_DAEMONIZE=true
+      - SPARK_SQL_CATALOG_IMPLEMENTATION=hive
     depends_on:
       - spark-master
     volumes:
       - ./spark-events:/tmp/spark-events
+      - ./hive-site.xml:/opt/bitnami/spark/conf/hive-site.xml
     ports:
-      - "18080:18080" # Porta do History Server
+      - "18080:18080"
     mem_limit: 512m
-    networks:
-      - spark_net
-
-  hive-metastore:
-    image: metastore:latest
-    container_name: hive-metastore
-    environment:
-      - HIVE_METASTORE_USER=hive
-      - HIVE_METASTORE_PASSWORD=hive
-      - HIVE_METASTORE_DB=metastore
-      - HIVE_METASTORE_HOST=hive-metastore
-    ports:
-      - "9083:9083"
-    volumes:
-      - ./metastore:/metastore
     networks:
       - spark_net
 
