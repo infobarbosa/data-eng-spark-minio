@@ -231,6 +231,17 @@ SELECT * FROM ecommerce.clientes LIMIT 2"
 
 ```
 
+```sh
+docker exec -it \
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
+DESCRIBE TABLE ecommerce.clientes"
+
+```
 ### Criando a tabela `pedidos`
 ```sh
 docker exec -it \
@@ -269,6 +280,18 @@ spark-master spark-sql \
 --conf spark.hadoop.fs.s3a.path.style.access=true \
 --conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
 SELECT * FROM ecommerce.pedidos LIMIT 2"
+
+```
+
+```sh
+docker exec -it \
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
+DESCRIBE TABLE ecommerce.pedidos"
 
 ```
 
