@@ -55,7 +55,7 @@ docker compose logs -f
 # Parte 2 - Datasets
 ### O dataset de clientes
 ```sh
-mkdir ./datasets/
+mkdir -p ./datasets/
 
 ```
 
