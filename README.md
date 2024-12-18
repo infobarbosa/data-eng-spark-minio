@@ -400,6 +400,18 @@ SELECT * FROM ecommerce.clientes_silver LIMIT 2"
 
 ```
 
+```sh
+docker exec -it \
+spark-master spark-submit \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem \
+s3a://scripts/clientes-spark-sql.py
+
+```
+
 ### Processando o script `pedidos.py`
 ```sh
 docker exec -it \
