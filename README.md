@@ -96,7 +96,15 @@ aws s3 mb s3://gold --endpoint-url http://localhost:9000
 
 ```
 
-### 4. Verificando
+### 4. O bucket `scripts`
+```sh
+AWS_ACCESS_KEY_ID=minioadmin \
+AWS_SECRET_ACCESS_KEY=minioadmin \
+aws s3 mb s3://scripts --endpoint-url http://localhost:9000
+
+```
+
+### 5. Verificando
 ```sh
 AWS_ACCESS_KEY_ID=minioadmin \
 AWS_SECRET_ACCESS_KEY=minioadmin \
@@ -104,7 +112,7 @@ aws s3 ls --endpoint-url http://localhost:9000
 
 ```
 
-### 5. Upload do arquivo de clientes
+### 6. Upload do arquivo de clientes
 ```sh
 AWS_ACCESS_KEY_ID=minioadmin \
 AWS_SECRET_ACCESS_KEY=minioadmin \
@@ -113,7 +121,7 @@ aws s3 cp ./datasets/clientes.csv.gz s3://bronze/clientes/clientes.csv.gz \
 
 ```
 
-### 6. Upload do arquivo de pedidos
+### 7. Upload do arquivo de pedidos
 ```sh
 AWS_ACCESS_KEY_ID=minioadmin \
 AWS_SECRET_ACCESS_KEY=minioadmin \
@@ -122,7 +130,7 @@ aws s3 cp ./datasets/pedidos-2024-01-01.csv.gz s3://bronze/pedidos/pedidos-2024-
 
 ```
 
-### 7. Verificando
+### 8. Verificando
 ```sh
 AWS_ACCESS_KEY_ID=minioadmin \
 AWS_SECRET_ACCESS_KEY=minioadmin \
@@ -137,7 +145,33 @@ aws s3 ls bronze/pedidos/ --endpoint-url http://localhost:9000
 
 ```
 
-# Parte 4 - Spark
+### 9. Upload do script `clientes.py`
+```sh
+AWS_ACCESS_KEY_ID=minioadmin \
+AWS_SECRET_ACCESS_KEY=minioadmin \
+aws s3 cp ./clientes.py s3://scripts/clientes.py \
+--endpoint-url http://localhost:9000
+
+```
+
+### 10. Upload do script `pedidos.py`
+```sh
+AWS_ACCESS_KEY_ID=minioadmin \
+AWS_SECRET_ACCESS_KEY=minioadmin \
+aws s3 cp ./pedidos.py s3://scripts/pedidos.py \
+--endpoint-url http://localhost:9000
+
+```
+
+### Verificando a pasta `scripts`
+```sh
+AWS_ACCESS_KEY_ID=minioadmin \
+AWS_SECRET_ACCESS_KEY=minioadmin \
+aws s3 ls scripts/ --endpoint-url http://localhost:9000
+
+```
+
+# Parte 4 - Tabelas
 
 ### Criando o database `ecommerce`
 ```sh
@@ -317,6 +351,58 @@ spark-master spark-sql \
 --conf spark.hadoop.fs.s3a.path.style.access=true \
 --conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
 DESCRIBE TABLE ecommerce.pedidos_silver"
+
+```
+
+```sh
+docker exec -it \
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
+SELECT * FROM ecommerce.pedidos_silver LIMIT 2"
+
+```
+
+# Parte 6 - Processamento
+
+### Processando o script `clientes.py`
+```sh
+docker exec -it \
+spark-master spark-submit \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem \
+s3a://scripts/clientes.py
+
+```
+
+```sh
+docker exec -it \
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
+SELECT * FROM ecommerce.clientes_silver LIMIT 2"
+
+```
+
+### Processando o script `pedidos.py`
+```sh
+docker exec -it \
+spark-master spark-submit \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem \
+s3a://scripts/pedidos.py
 
 ```
 
