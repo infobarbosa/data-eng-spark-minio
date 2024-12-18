@@ -182,7 +182,7 @@ aws s3 ls scripts/ --endpoint-url http://localhost:9000
 
 ### Criando o database `ecommerce`
 ```sh
-docker exec -it spark-master spark-sql -e "CREATE DATABASE ecommerce"
+docker exec -it spark-master spark-sql -e "CREATE DATABASE IF NOT EXISTS ecommerce"
 
 ```
 
@@ -201,7 +201,7 @@ spark-master spark-sql \
 --conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
 --conf spark.hadoop.fs.s3a.path.style.access=true \
 --conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
-CREATE TABLE ecommerce.clientes (
+CREATE TABLE IF NOT EXISTS ecommerce.clientes (
     ID LONG,
     NOME STRING,
     DATA_NASC DATE,
@@ -240,7 +240,7 @@ spark-master spark-sql \
 --conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
 --conf spark.hadoop.fs.s3a.path.style.access=true \
 --conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
-CREATE TABLE ecommerce.pedidos (
+CREATE TABLE IF NOT EXISTS ecommerce.pedidos (
     ID_PEDIDO STRING,
     PRODUTO STRING,
     VALOR_UNITARIO FLOAT,
