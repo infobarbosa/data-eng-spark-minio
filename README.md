@@ -154,12 +154,10 @@ docker exec -it spark-master spark-sql -e "DESCRIBE DATABASE ecommerce"
 ### Criando a tabela `clientes`
 ```sh
 docker exec -it \
--e AWS_ACCESS_KEY_ID=minioadmin \
--e AWS_SECRET_ACCESS_KEY=minioadmin \
 spark-master spark-sql \
 --conf spark.hadoop.fs.s3a.access.key=minioadmin \
 --conf spark.hadoop.fs.s3a.secret.key=minioadmin \
---conf spark.hadoop.fs.s3a.endpoint=http://localhost:9000 \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
 --conf spark.hadoop.fs.s3a.path.style.access=true \
 --conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
 CREATE TABLE ecommerce.clientes (
@@ -182,9 +180,12 @@ OPTIONS (
 ### Verificando
 ```sh
 docker exec -it \
--e AWS_ACCESS_KEY_ID=minioadmin \
--e AWS_SECRET_ACCESS_KEY=minioadmin \
-spark-master spark-sql -e "
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
 SELECT * FROM ecommerce.clientes LIMIT 2"
 
 ```
@@ -192,12 +193,10 @@ SELECT * FROM ecommerce.clientes LIMIT 2"
 ### Criando a tabela `pedidos`
 ```sh
 docker exec -it \
--e AWS_ACCESS_KEY_ID=minioadmin \
--e AWS_SECRET_ACCESS_KEY=minioadmin \
 spark-master spark-sql \
 --conf spark.hadoop.fs.s3a.access.key=minioadmin \
 --conf spark.hadoop.fs.s3a.secret.key=minioadmin \
---conf spark.hadoop.fs.s3a.endpoint=http://localhost:9000 \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
 --conf spark.hadoop.fs.s3a.path.style.access=true \
 --conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
 CREATE TABLE ecommerce.pedidos (
@@ -222,9 +221,12 @@ OPTIONS (
 ### Verificando
 ```sh
 docker exec -it \
--e AWS_ACCESS_KEY_ID=minioadmin \
--e AWS_SECRET_ACCESS_KEY=minioadmin \
-spark-master spark-sql -e "
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
 SELECT * FROM ecommerce.pedidos LIMIT 2"
 
 ```
