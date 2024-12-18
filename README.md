@@ -145,6 +145,12 @@ docker exec -it spark-master spark-sql -e "CREATE DATABASE ecommerce"
 
 ```
 
+### Verificando
+```sh
+docker exec -it spark-master spark-sql -e "DESCRIBE DATABASE ecommerce"
+
+```
+
 ### Criando a tabela `clientes`
 ```sh
 docker exec -it \
