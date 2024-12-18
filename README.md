@@ -149,7 +149,7 @@ aws s3 ls bronze/pedidos/ --endpoint-url http://localhost:9000
 ```sh
 AWS_ACCESS_KEY_ID=minioadmin \
 AWS_SECRET_ACCESS_KEY=minioadmin \
-aws s3 cp ./clientes.py s3://scripts/clientes.py \
+aws s3 cp ./scripts/clientes.py s3://scripts/clientes.py \
 --endpoint-url http://localhost:9000
 
 ```
@@ -158,7 +158,7 @@ aws s3 cp ./clientes.py s3://scripts/clientes.py \
 ```sh
 AWS_ACCESS_KEY_ID=minioadmin \
 AWS_SECRET_ACCESS_KEY=minioadmin \
-aws s3 cp ./pedidos.py s3://scripts/pedidos.py \
+aws s3 cp ./scripts/pedidos.py s3://scripts/pedidos.py \
 --endpoint-url http://localhost:9000
 
 ```
