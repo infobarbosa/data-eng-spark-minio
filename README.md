@@ -141,13 +141,21 @@ aws s3 ls bronze/pedidos/ --endpoint-url http://localhost:9000
 
 ### Criando o database `ecommerce`
 ```sh
-docker exec -it spark-master /opt/spark/bin/spark-sql -e "CREATE DATABASE ecommerce"
+docker exec -it spark-master spark-sql -e "CREATE DATABASE ecommerce"
 
 ```
 
 ### Criando a tabela `clientes`
 ```sh
-docker exec -it spark-master spark-sql -e "
+docker exec -it \
+-e AWS_ACCESS_KEY_ID=minioadmin \
+-e AWS_SECRET_ACCESS_KEY=minioadmin \
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://localhost:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
 CREATE TABLE ecommerce.clientes (
     ID LONG,
     NOME STRING,
@@ -157,16 +165,35 @@ CREATE TABLE ecommerce.clientes (
 )
 USING csv
 OPTIONS (
-    path 's3a://clientes/clientes.csv.gz',
+    path 's3a://bronze/clientes/',
     header 'true',
     delimiter ';',
     compression 'gzip'
 )"
+
+```
+
+### Verificando
+```sh
+docker exec -it \
+-e AWS_ACCESS_KEY_ID=minioadmin \
+-e AWS_SECRET_ACCESS_KEY=minioadmin \
+spark-master spark-sql -e "
+SELECT * FROM ecommerce.clientes LIMIT 2"
+
 ```
 
 ### Criando a tabela `pedidos`
 ```sh
-docker exec -it spark-master /opt/spark/bin/spark-sql -e "
+docker exec -it \
+-e AWS_ACCESS_KEY_ID=minioadmin \
+-e AWS_SECRET_ACCESS_KEY=minioadmin \
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://localhost:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
 CREATE TABLE ecommerce.pedidos (
     ID_PEDIDO STRING,
     PRODUTO STRING,
@@ -178,9 +205,20 @@ CREATE TABLE ecommerce.pedidos (
 )
 USING csv
 OPTIONS (
-    path 's3a://clientes/pedidos-2024-01-01.csv.gz',
+    path 's3a://bronze/pedidos/',
     header 'true',
     delimiter ';',
     compression 'gzip'
 )"
+
+```
+
+### Verificando
+```sh
+docker exec -it \
+-e AWS_ACCESS_KEY_ID=minioadmin \
+-e AWS_SECRET_ACCESS_KEY=minioadmin \
+spark-master spark-sql -e "
+SELECT * FROM ecommerce.pedidos LIMIT 2"
+
 ```
