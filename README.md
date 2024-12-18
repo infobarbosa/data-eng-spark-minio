@@ -72,15 +72,31 @@ curl -L -o ./datasets/pedidos-2024-01-01.csv.gz https://github.com/infobarbosa/d
 
 # Parte 3 - MinIO
 
-### Criando o bucket `clientes`
+### 1. O bucket `bronze`
 ```sh
 AWS_ACCESS_KEY_ID=minioadmin \
 AWS_SECRET_ACCESS_KEY=minioadmin \
-aws s3 mb s3://clientes --endpoint-url http://localhost:9000
+aws s3 mb s3://bronze --endpoint-url http://localhost:9000
 
 ```
 
-Verificando:
+### 2. O bucket `silver`
+```sh
+AWS_ACCESS_KEY_ID=minioadmin \
+AWS_SECRET_ACCESS_KEY=minioadmin \
+aws s3 mb s3://silver --endpoint-url http://localhost:9000
+
+```
+
+### 3. O bucket `gold`
+```sh
+AWS_ACCESS_KEY_ID=minioadmin \
+AWS_SECRET_ACCESS_KEY=minioadmin \
+aws s3 mb s3://gold --endpoint-url http://localhost:9000
+
+```
+
+### 4. Verificando
 ```sh
 AWS_ACCESS_KEY_ID=minioadmin \
 AWS_SECRET_ACCESS_KEY=minioadmin \
@@ -88,20 +104,36 @@ aws s3 ls --endpoint-url http://localhost:9000
 
 ```
 
-### Upload do arquivo csv
+### 5. Upload do arquivo de clientes
 ```sh
 AWS_ACCESS_KEY_ID=minioadmin \
 AWS_SECRET_ACCESS_KEY=minioadmin \
-aws s3 cp ./datasets/clientes.csv.gz s3://clientes/clientes.csv.gz \
+aws s3 cp ./datasets/clientes.csv.gz s3://bronze/clientes/clientes.csv.gz \
 --endpoint-url http://localhost:9000
 
 ```
 
-### Verificando o conteúdo do bucket
+### 6. Upload do arquivo de pedidos
 ```sh
 AWS_ACCESS_KEY_ID=minioadmin \
 AWS_SECRET_ACCESS_KEY=minioadmin \
-aws s3 ls clientes --endpoint-url http://localhost:9000
+aws s3 cp ./datasets/pedidos-2024-01-01.csv.gz s3://bronze/pedidos/pedidos-2024-01-01.csv.gz \
+--endpoint-url http://localhost:9000
+
+```
+
+### 7. Verificando
+```sh
+AWS_ACCESS_KEY_ID=minioadmin \
+AWS_SECRET_ACCESS_KEY=minioadmin \
+aws s3 ls bronze/clientes --endpoint-url http://localhost:9000
+
+```
+
+```sh
+AWS_ACCESS_KEY_ID=minioadmin \
+AWS_SECRET_ACCESS_KEY=minioadmin \
+aws s3 ls bronze/pedidos --endpoint-url http://localhost:9000
 
 ```
 
