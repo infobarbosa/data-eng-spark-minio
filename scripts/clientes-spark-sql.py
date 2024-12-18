@@ -11,7 +11,7 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 # Verifica se a tabela existe listando todas as tabelas no banco de dados ecommerce
-spark.sql("SHOW TABLES IN ecommerce").show()
+spark.sql("SHOW TABLES IN spark_catalog.ecommerce").show()
 
 # Consulta SQL para obter os dados da tabela ecommerce.clientes
 query = "SELECT * FROM spark_catalog.ecommerce.clientes"
