@@ -230,3 +230,104 @@ spark-master spark-sql \
 SELECT * FROM ecommerce.pedidos LIMIT 2"
 
 ```
+
+### Criando a tabela `clientes_silver`
+```sh
+docker exec -it \
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
+CREATE TABLE ecommerce.clientes_silver (
+    ID LONG,
+    NOME STRING,
+    DATA_NASC DATE,
+    CPF STRING,
+    EMAIL STRING
+)
+USING parquet
+OPTIONS (
+    path 's3a://silver/clientes/',
+    compression 'snappy'
+)"
+
+```
+
+### Verificando
+```sh
+docker exec -it \
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
+DESCRIBE TABLE ecommerce.clientes_silver"
+
+```
+
+```sh
+docker exec -it \
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
+SELECT * FROM ecommerce.clientes_silver LIMIT 2"
+
+```
+
+### Criando a tabela `pedidos_silver`
+```sh
+docker exec -it \
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
+CREATE TABLE ecommerce.pedidos_silver (
+    ID_PEDIDO STRING,
+    PRODUTO STRING,
+    VALOR_UNITARIO FLOAT,
+    QUANTIDADE LONG,
+    DATA_CRIACAO DATE,
+    UF STRING,
+    ID_CLIENTE LONG
+)
+USING parquet
+OPTIONS (
+    path 's3a://silver/pedidos/',
+    compression 'snappy'
+)"
+
+```
+
+### Verificando
+
+```sh
+docker exec -it \
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
+DESCRIBE TABLE ecommerce.pedidos_silver"
+
+```
+
+```sh
+docker exec -it \
+spark-master spark-sql \
+--conf spark.hadoop.fs.s3a.access.key=minioadmin \
+--conf spark.hadoop.fs.s3a.secret.key=minioadmin \
+--conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
+--conf spark.hadoop.fs.s3a.path.style.access=true \
+--conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
+SELECT * FROM ecommerce.pedidos_silver LIMIT 2"
+
+```
