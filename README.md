@@ -126,14 +126,14 @@ aws s3 cp ./datasets/pedidos-2024-01-01.csv.gz s3://bronze/pedidos/pedidos-2024-
 ```sh
 AWS_ACCESS_KEY_ID=minioadmin \
 AWS_SECRET_ACCESS_KEY=minioadmin \
-aws s3 ls bronze/clientes --endpoint-url http://localhost:9000
+aws s3 ls bronze/clientes/ --endpoint-url http://localhost:9000
 
 ```
 
 ```sh
 AWS_ACCESS_KEY_ID=minioadmin \
 AWS_SECRET_ACCESS_KEY=minioadmin \
-aws s3 ls bronze/pedidos --endpoint-url http://localhost:9000
+aws s3 ls bronze/pedidos/ --endpoint-url http://localhost:9000
 
 ```
 
