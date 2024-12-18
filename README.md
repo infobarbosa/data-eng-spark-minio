@@ -304,7 +304,7 @@ spark-master spark-sql \
 --conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
 --conf spark.hadoop.fs.s3a.path.style.access=true \
 --conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
-CREATE TABLE ecommerce.clientes_silver (
+CREATE TABLE IF NOT EXISTS ecommerce.clientes_silver (
     ID LONG,
     NOME STRING,
     DATA_NASC DATE,
@@ -353,7 +353,7 @@ spark-master spark-sql \
 --conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
 --conf spark.hadoop.fs.s3a.path.style.access=true \
 --conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem -e "
-CREATE TABLE ecommerce.pedidos_silver (
+CREATE TABLE IF NOT EXISTS ecommerce.pedidos_silver (
     ID_PEDIDO STRING,
     PRODUTO STRING,
     VALOR_UNITARIO FLOAT,
