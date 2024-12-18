@@ -10,8 +10,11 @@ spark = SparkSession.builder \
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
     .getOrCreate()
 
+# Verifica se a tabela existe listando todas as tabelas no banco de dados ecommerce
+spark.sql("SHOW TABLES IN ecommerce").show()
+
 # Consulta SQL para obter os dados da tabela ecommerce.clientes
-query = "SELECT * FROM ecommerce.clientes"
+query = "SELECT * FROM spark_catalog.ecommerce.clientes"
 
 # Executa a consulta SQL
 result = spark.sql(query)
