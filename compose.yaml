@@ -61,8 +61,7 @@ services:
       - SPARK_EVENTLOG_ENABLED=true
       - SPARK_EVENTLOG_DIR=file:///tmp/spark-events
     depends_on:
-      hive-metastore:
-        condition: service_healthy
+      - hive-metastore
     ports:
       - "8080:8080" # UI do Master
       - "7077:7077" # Porta para conectarem Workers
