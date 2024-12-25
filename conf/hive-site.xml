@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <!-- Localização do warehouse no HDFS ou local (ajuste se quiser) -->
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>file:/tmp/hive/warehouse</value>
+  </property>
+
+  <!-- URL de conexão ao MySQL -->
+  <property>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:mysql://mysql:3306/metastore?createDatabaseIfNotExist=true</value>
+  </property>
+
+  <!-- Driver do MySQL -->
+  <property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>com.mysql.cj.jdbc.Driver</value>
+  </property>
+
+  <!-- Usuário e senha do banco -->
+  <property>
+    <name>javax.jdo.option.ConnectionUserName</name>
+    <value>hive</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionPassword</name>
+    <value>hive</value>
+  </property>
+
+  <!-- Configuração do Metastore (porta 9083, etc.) -->
+  <property>
+    <name>hive.metastore.uris</name>
+    <value>thrift://hive-metastore:9083</value>
+  </property>
+
+</configuration>

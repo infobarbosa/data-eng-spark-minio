@@ -459,3 +459,9 @@ spark-master spark-sql \
 SELECT * FROM ecommerce.pedidos_silver LIMIT 2"
 
 ```
+
+
+# Restrições
+### Hive
+1. Estou utilizando a versão 3.1.3 do Hive. Tentei utilizar a versão 4.0 mas apresentou erros de compatibilidade.
+2. Estou utilizando um entrypoint customizado para o Hive em razão de problemas com o entrypoint default da imagem que força o uso do Derby como database (até mesmo forçando o mysql via `schematool -dbType mysql`)
