@@ -8,15 +8,18 @@ def main():
     
     # Lista os databases existentes
     spark.sql("SHOW DATABASES").show()
+
+    # Cria um database teste
+    spark.sql("CREATE DATABASE IF NOT EXISTS database_teste")
     
     # Cria uma tabela (se não existir)
-    spark.sql("CREATE TABLE IF NOT EXISTS default.test_table (id INT, name STRING)")
+    spark.sql("CREATE TABLE IF NOT EXISTS database_teste.tabela_teste (id INT, name STRING)")
     
     # Insere alguns dados na tabela
-    spark.sql("INSERT INTO default.test_table VALUES (1, 'Alice'), (2, 'Bob')")
+    spark.sql("INSERT INTO database_teste.tabela_teste VALUES (1, 'Barbosa'), (2, 'Marcelo')")
     
     # Lê de volta para confirmar
-    df = spark.sql("SELECT * FROM default.test_table")
+    df = spark.sql("SELECT * FROM database_teste.tabela_teste")
     df.show()
     
     spark.stop()
